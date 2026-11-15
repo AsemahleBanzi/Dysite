@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #statusMessage {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>User Details</h2>
+        <form id="userForm">
+            <div class="input-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="input-group">
+                <label for="surname">Surname</label>
+                <input type="text" id="surname" name="surname" placeholder="Enter your surname" required>
+            </div>
+
+            <div class="input-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" placeholder="Enter your age" min="1" max="120" required>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+        <p id="statusMessage"></p>
+    </div>
+
+    <script>
+        const form = document.getElementById('userForm');
+        const statusMessage = document.getElementById('statusMessage');
+
+        form.addEventListener('submit', async (event) => {
+            // Prevent the page from refreshing on submit
+            event.preventDefault();
+
+            // Gather the values from the form
+            const userData = {
+                name: document.getElementById('name').value.trim(),
+                surname: document.getElementById('surname').value.trim(),
+                age: parseInt(document.getElementById('age').value, 10)
+            };
+
+            statusMessage.style.color = '#555';
+            statusMessage.textContent = 'Sending data...';
+
+            try {
+                // Replace this URL with your backend server URL later
+                const response = await fetch('http://localhost:3000/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    statusMessage.style.color = 'green';
+                    statusMessage.textContent = `Saved: ${userData.name} ${userData.surname} (${userData.age})`;
+                    form.reset();
+                } else {
+                    throw new Error('Server responded with an error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                statusMessage.style.color = 'red';
+                statusMessage.textContent = 'Could not connect to server yet. Check console for data.';
+                console.log('Captured Form Data:', userData);
+            }
+        });
+    </script>
+
+</body>
+</html>
