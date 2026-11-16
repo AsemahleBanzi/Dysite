@@ -129,33 +129,10 @@
             };
 
             statusMessage.style.color = '#555';
-            statusMessage.textContent = 'Sending data...';
+            statusMessage.textContent = 'Sending data... (Render free tier may take up to 50s to wake up)';
 
             try {
-                // Replace this URL with your backend server URL later
-                const response = await fetch('http://localhost:3000/api/users', {
+                const response = await fetch('https://dysite-backend.onrender.com/api/users', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(userData)
-                });
-
-                if (response.ok) {
-                    statusMessage.style.color = 'green';
-                    statusMessage.textContent = `Saved: ${userData.name} ${userData.surname} (${userData.age})`;
-                    form.reset();
-                } else {
-                    throw new Error('Server responded with an error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                statusMessage.style.color = 'red';
-                statusMessage.textContent = 'Could not connect to server yet. Check console for data.';
-                console.log('Captured Form Data:', userData);
-            }
-        });
-    </script>
-
-</body>
-</html>
+                        
